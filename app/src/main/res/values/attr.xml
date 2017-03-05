@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="textHighLight" format="color" />
+    <attr name="textNormal" format="color" />
+    <attr name="textWeak" format="color" />
+    <attr name="appBackGround" format="color" />
+
+</resources>

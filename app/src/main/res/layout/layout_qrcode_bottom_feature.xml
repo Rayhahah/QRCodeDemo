@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_large_iii"
+    android:background="@color/black"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/qrcode_btn_photo"
+        style="@style/text_middle_center"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/selector_ic_photo"
+        android:text="相册"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/qrcode_btn_flash"
+        style="@style/text_middle_center"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/selector_ic_flash"
+        android:text="闪光灯"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/qrcode_btn_encode"
+        style="@style/text_middle_center"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/selector_ic_qrcode"
+        android:text="二维码"
+        android:textColor="@color/white" />
+
+</LinearLayout>

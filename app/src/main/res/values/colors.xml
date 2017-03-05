@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimaryWhite">#ffffff</color>
+    <color name="colorPrimaryWhiteDark">#dddddd</color>
+    <color name="colorAccentWhite">#6A68FF</color>
+
+    <color name="colorPrimaryGray">#777</color>
+    <color name="colorPrimaryGrayDark">#333</color>
+    <color name="colorAccentGray">#6A68FF</color>
+
+    <color name="appBlue">#6A68FF</color>
+
+    <color name="transparent">#0fff</color>
+    <color name="transparent_i">#4fff</color>
+    <color name="transparent_ii">#8fff</color>
+    <color name="transparent_iii">#cfff</color>
+
+    <color name="white">#fff</color>
+    <color name="white_gray">#ccc</color>
+    <color name="gray">#888</color>
+    <color name="dark_gray">#444</color>
+    <color name="black">#000</color>
+
+    <!-- QR_Code -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#b0000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="result_image_border">#ffffffff</color>
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c000ff00</color>
+    <color name="system_bar_color">#fed952</color>
+</resources>
