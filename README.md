@@ -1,9 +1,9 @@
 # QRCodeDemo
 
-#新手快速集成ZXing的扫描二维码，同时自定义封装实现
+# 新手快速集成ZXing的扫描二维码，同时自定义封装实现
 
 
-##目录
+## 目录
 - 基本概述（项目资源地址）
   - 优点
   - 缺点
@@ -18,25 +18,25 @@
   - 自定义功能代码
 
 
-##基本概述
+## 基本概述
 >最老牌的二维码框架
 >[博客地址](http://www.jianshu.com/p/e572a4db51f6)
 >需要的资源可以直接从这个项目里面提取
 
-###优势
+### 优势
 - Google的开源框架，高度的可定制性
 - 除了二维码还可以识别其他码，如条形码
 - 不依赖第三方，使用简单
-###缺点
+### 缺点
 - 相对Gradle依赖，ZXing的集成更为繁琐
 - 高度的可定制性也表示这更高的学习成本
 
-##开发过程
-###ZXing集成
-####导入ZXing.jar包
+## 开发过程
+### ZXing集成
+#### 导入ZXing.jar包
 ![Alt text](./导入ZXing.jar.png)
 - 导入以后记得右键add as library
-####拷贝资源文件到工程中
+#### 拷贝资源文件到工程中
 将下面资源拷贝到自己工程下
 - layout包：
 	- `activity_qrcode_capture_layout.xml` ：主要扫码界面的布局，自定义布局的核心文件
@@ -118,11 +118,11 @@
 - xml包： 新建 xml包
 	- 添加：`preferences.xml`
 
-####拷贝扫码核心类到工程中
+#### 拷贝扫码核心类到工程中
 这个过程很简单，直接将ZXing的Java核心类文件夹拷贝到你的工程包名目录下就可以了
 ![Alt text](./ZXing文件目录导入.png)
 
-###主要包类简述
+### 主要包类简述
 >对核心功能类的了解，就是我们自定义扫码功能的基础
 
 - `CaptureActivity` ：整个扫码的界面活动类
@@ -137,7 +137,7 @@
 - `Util` ：获取屏幕宽高和IMEI
 - `ViewfinderView`  **扫码自定义框最主要的类**，自定义扫码框主要在这里完成
 
-###自定义扫码页面布局文件
+### 自定义扫码页面布局文件
 主要在`activity_qrcode_capture_layout.xml`中操作：
 本来的文件布局：
 只有一个简单的摄像头预览的SurfaceView和扫码框ViewfinderView
@@ -145,7 +145,8 @@
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
     <RelativeLayout
@@ -158,23 +159,41 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center" />
 
-        <com.youdu.zxing.view.ViewfinderView
+        <com.rayhahah.qrcodedemo.zxing.view.ViewfinderView
             android:id="@+id/viewfinder_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
 
-
-   <!-- 自定义的布局界面-->
-  <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/include1"
-                layout="@layout/layout_qrcode_toolbar"
+            <RelativeLayout
+                android:background="@color/transparent"
                 android:layout_width="match_parent"
-                android:layout_height="@dimens/dp_big_ii" />
+                android:layout_height="@dimen/dp_50">
+
+
+                <ImageView
+                    android:visibility="visible"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/iv_qrcode_back"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:src="@drawable/ic_svg_arrow_left_color_primary_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:layout_centerInParent="true"
+                    android:textSize="@dimen/sp_20"
+                    android:gravity="center"
+                    android:text="@string/decode_qrcode"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -185,10 +204,9 @@
                 android:id="@+id/include2"
                 layout="@layout/layout_qrcode_bottom_feature"
                 android:layout_width="match_parent"
-                android:layout_height="@dimens/dp_big_ii" />
+                android:layout_height="@dimen/dp_60" />
 
         </LinearLayout>
-
 
     </RelativeLayout>
 
@@ -196,40 +214,18 @@
 ```
 
 然后加入我们自己的元素：
-1. titleBar : 中间的标题TextView、 返回键
+
+1. 底部功能栏：相册、闪光的、生成二维码
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/actionBarSize">
-
-    <TextView
-        android:id="@+id/qrcode_btn_back"
-        android:layout_width="@dimen/dp_middle_i"
-        android:layout_height="@dimen/dp_middle_i"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_small_iiii"
-        android:background="@drawable/selector_ic_back" />
-
-    <TextView
-        style="@style/text_big_center"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="扫一扫"
-        android:textColor="@color/white" />
-
-</RelativeLayout>
-```
-
-2. 底部功能栏：相册、闪光的、生成二维码 
-
-```
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="75dp"
-    android:orientation="horizontal">
+    android:layout_height="@dimen/dp_60"
+    android:background="@color/transparent"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_5">
 
     <TextView
         android:id="@+id/qrcode_btn_photo"
@@ -238,8 +234,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:drawableTop="@drawable/selector_ic_photo"
-        android:text="相册"
-        android:textColor="@color/white" />
+        android:text="@string/photo_album"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/sp_16"/>
 
     <TextView
         android:id="@+id/qrcode_btn_flash"
@@ -248,8 +245,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:drawableTop="@drawable/selector_ic_flash"
-        android:text="闪光灯"
-        android:textColor="@color/white" />
+        android:text="@string/flash_light"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/sp_16"/>
 
     <TextView
         android:id="@+id/qrcode_btn_encode"
@@ -258,8 +256,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:drawableTop="@drawable/selector_ic_qrcode"
-        android:text="二维码"
-        android:textColor="@color/white" />
+        android:text="@string/qrcode"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/sp_16"/>
 
 </LinearLayout>
 ```
@@ -270,123 +269,121 @@
 
 
 ```
- @Override
-    public void onDraw(Canvas canvas) {
-    //获取得到扫码框矩形的大小
-        Rect frame = CameraManager.get().getFramingRect();
-        if (frame == null) {
-            return;
-        }
+   @Override
+     public void onDraw(Canvas canvas) {
+         Rect frame = CameraManager.get().getFramingRect();
+         if (frame == null) {
+             return;
+         }
 
-        if (!isFirst) {
-            isFirst = true;
-            slideTop = frame.top;
-            slideBottom = frame.bottom;
-        }
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
+         if (!isFirst) {
+             isFirst = true;
+             slideTop = frame.top;
+             slideBottom = frame.bottom;
+         }
+         int width = canvas.getWidth();
+         int height = canvas.getHeight();
 
-        // Draw the exterior (i.e. outside the framing rect) darkened
-        //框架本身的扫码框绘制
-        paint.setColor(resultBitmap != null ? resultColor : maskColor);
-        canvas.drawRect(0, 0, width, frame.top, paint);
-        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
-        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1,
-                paint);
-        canvas.drawRect(0, frame.bottom + 1, width, height, paint);
+         // Draw the exterior (i.e. outside the framing rect) darkened
+         paint.setColor(resultBitmap != null ? resultColor : maskColor);
+         canvas.drawRect(0, 0, width, frame.top, paint);
+         canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
+         canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1,
+                 paint);
+         canvas.drawRect(0, frame.bottom + 1, width, height, paint);
 
-//自定义部分开始
-        if (resultBitmap != null) {
-            // Draw the opaque result bitmap over the scanning rectangle
-            paint.setAlpha(OPAQUE);
-            canvas.drawBitmap(resultBitmap, null, frame, paint);
-        } else {
+         //这里开始是自定义的部分
+         if (resultBitmap != null) {
+             // Draw the opaque result bitmap over the scanning rectangle
+             paint.setAlpha(OPAQUE);
+             canvas.drawBitmap(resultBitmap, null, frame, paint);
+         } else {
 
-			//根据扫码框的大小来绘制
-            //画出8个正方形，组成括住扫码框
-            paint.setColor(Color.BLUE);
-            canvas.drawRect(frame.left, frame.top, frame.left + ScreenRate,
-                    frame.top + CORNER_WIDTH, paint);
-            canvas.drawRect(frame.left, frame.top, frame.left + CORNER_WIDTH,
-                    frame.top + ScreenRate, paint);
-            canvas.drawRect(frame.right - ScreenRate, frame.top, frame.right,
-                    frame.top + CORNER_WIDTH, paint);
-            canvas.drawRect(frame.right - CORNER_WIDTH, frame.top, frame.right,
-                    frame.top + ScreenRate, paint);
-            canvas.drawRect(frame.left, frame.bottom - CORNER_WIDTH, frame.left
-                    + ScreenRate, frame.bottom, paint);
-            canvas.drawRect(frame.left, frame.bottom - ScreenRate, frame.left
-                    + CORNER_WIDTH, frame.bottom, paint);
-            canvas.drawRect(frame.right - ScreenRate, frame.bottom
-                    - CORNER_WIDTH, frame.right, frame.bottom, paint);
-            canvas.drawRect(frame.right - CORNER_WIDTH, frame.bottom
-                    - ScreenRate, frame.right, frame.bottom, paint);
+             //画出8个正方形，组成括住扫码框
+             paint.setColor(scanColor);
+             canvas.drawRect(frame.left, frame.top, frame.left + ScreenRate,
+                     frame.top + CORNER_WIDTH, paint);
+             canvas.drawRect(frame.left, frame.top, frame.left + CORNER_WIDTH,
+                     frame.top + ScreenRate, paint);
+             canvas.drawRect(frame.right - ScreenRate, frame.top, frame.right,
+                     frame.top + CORNER_WIDTH, paint);
+             canvas.drawRect(frame.right - CORNER_WIDTH, frame.top, frame.right,
+                     frame.top + ScreenRate, paint);
+             canvas.drawRect(frame.left, frame.bottom - CORNER_WIDTH, frame.left
+                     + ScreenRate, frame.bottom, paint);
+             canvas.drawRect(frame.left, frame.bottom - ScreenRate, frame.left
+                     + CORNER_WIDTH, frame.bottom, paint);
+             canvas.drawRect(frame.right - ScreenRate, frame.bottom
+                     - CORNER_WIDTH, frame.right, frame.bottom, paint);
+             canvas.drawRect(frame.right - CORNER_WIDTH, frame.bottom
+                     - ScreenRate, frame.right, frame.bottom, paint);
 
-            /**
-             * 一直在移动的扫描条
-             */
-            slideTop += SPEEN_DISTANCE;
-            if (slideTop >= frame.bottom) {
-                slideTop = frame.top;
-            }
-            Rect lineRect = new Rect();
-            lineRect.left = frame.left;
-            lineRect.right = frame.right;
-            lineRect.top = slideTop;
-            lineRect.bottom = slideTop + 18;
-            canvas.drawBitmap(((BitmapDrawable) (getResources()
-                            .getDrawable(R.drawable.fle))).getBitmap(), null, lineRect,
-                    paint); //扫描条的资源
-//扫码框下方的文字提示
-            paint.setColor(Color.WHITE);
-            paint.setTextSize(TEXT_SIZE * density);
-            paint.setAlpha(0x40);
-            paint.setTypeface(Typeface.create("System", Typeface.BOLD));
-            String text = getResources().getString(R.string.scan_text);  //文字资源
-            float textWidth = paint.measureText(text);
+             /**
+              * 一直在移动的扫描条
+              */
+             slideTop += SPEEN_DISTANCE;
+             if (slideTop >= frame.bottom) {
+                 slideTop = frame.top;
+             }
+             Rect lineRect = new Rect();
+             lineRect.left = frame.left;
+             lineRect.right = frame.right;
+             lineRect.top = slideTop;
+             lineRect.bottom = slideTop + 18;
+             canvas.drawBitmap(((BitmapDrawable) (getResources()
+                             .getDrawable(R.drawable.blue_line))).getBitmap(), null, lineRect,
+                     paint);
 
-            canvas.drawText(
-                    text,
-                    (width - textWidth) / 2,
-                    (float) (frame.bottom + (float) TEXT_PADDING_TOP * density),
-                    paint);
-//自定义部分结束
+             paint.setColor(Color.WHITE);
+             paint.setTextSize(TEXT_SIZE * density);
+             paint.setAlpha(0x40);
+             paint.setTypeface(Typeface.create("System", Typeface.BOLD));
+             String text = getResources().getString(R.string.scan_text);
+             float textWidth = paint.measureText(text);
 
-            Collection<ResultPoint> currentPossible = possibleResultPoints;
-            Collection<ResultPoint> currentLast = lastPossibleResultPoints;
-            if (currentPossible.isEmpty()) {
-                lastPossibleResultPoints = null;
-            } else {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
-                lastPossibleResultPoints = currentPossible;
-                paint.setAlpha(OPAQUE);
-                paint.setColor(resultPointColor);
-                for (ResultPoint point : currentPossible) {
-                    canvas.drawCircle(frame.left + point.getX(), frame.top
-                            + point.getY(), 6.0f, paint);
-                }
-            }
-            if (currentLast != null) {
-                paint.setAlpha(OPAQUE / 2);
-                paint.setColor(resultPointColor);
-                for (ResultPoint point : currentLast) {
-                    canvas.drawCircle(frame.left + point.getX(), frame.top
-                            + point.getY(), 3.0f, paint);
-                }
-            }
+             canvas.drawText(
+                     text,
+                     (width - textWidth) / 2,
+                     (float) (frame.bottom + (float) TEXT_PADDING_TOP * density),
+                     paint);
 
-            postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top,
-                    frame.right, frame.bottom);
-        }
-    }
+             //自定义部分结束
+
+             Collection<ResultPoint> currentPossible = possibleResultPoints;
+             Collection<ResultPoint> currentLast = lastPossibleResultPoints;
+             if (currentPossible.isEmpty()) {
+                 lastPossibleResultPoints = null;
+             } else {
+                 possibleResultPoints = new HashSet<ResultPoint>(5);
+                 lastPossibleResultPoints = currentPossible;
+                 paint.setAlpha(OPAQUE);
+                 paint.setColor(resultPointColor);
+                 for (ResultPoint point : currentPossible) {
+                     canvas.drawCircle(frame.left + point.getX(), frame.top
+                             + point.getY(), 6.0f, paint);
+                 }
+             }
+             if (currentLast != null) {
+                 paint.setAlpha(OPAQUE / 2);
+                 paint.setColor(resultPointColor);
+                 for (ResultPoint point : currentLast) {
+                     canvas.drawCircle(frame.left + point.getX(), frame.top
+                             + point.getY(), 3.0f, paint);
+                 }
+             }
+
+             postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top,
+                     frame.right, frame.bottom);
+         }
+     }
 ```
 
-###自定义功能代码
+### 自定义功能代码
 在`CaptureActivity.Java`中完成：
 1. 首先找到我们的控件：
 
 ```
- btnBack = ((TextView) findViewById(R.id.qrcode_btn_back));
+  btnBack = ((ImageView) findViewById(R.id.iv_qrcode_back));
         btnPhoto = ((TextView) findViewById(R.id.qrcode_btn_photo));
         btnFlash = ((TextView) findViewById(R.id.qrcode_btn_flash));
         btnEncode = ((TextView) findViewById(R.id.qrcode_btn_encode));
@@ -394,45 +391,47 @@
         btnPhoto.setOnClickListener(this);
         btnFlash.setOnClickListener(this);
         btnEncode.setOnClickListener(this);
+
 ```
 
 2. 监听实现：
 
 ```
- @Override
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
-		        //返回按钮
-            case R.id.qrcode_btn_back:
+            case R.id.iv_qrcode_back:
                 finish();
                 break;
-                //选择本地图片
             case R.id.qrcode_btn_photo:
                 //跳转到系统相册选择图片
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 Intent wrapperIntent = Intent.createChooser(intent, "选择二维码图片");
-                //开启本地图片选择，并携带获取回传值
                 startActivityForResult(wrapperIntent, REQUEST_CODE);
                 break;
-                //开启闪光灯，主要调用CameraManager封装好的方法
             case R.id.qrcode_btn_flash:
                 if (isFlash) {
                     //关闭闪光灯
                     CameraManager.get().turnLightOff();
+                    isFlash=false;
                 } else {
                     //开启闪光灯
-                    CameraManager.get().turnLightOff();
+                    CameraManager.get().turnLightOn();
+                    isFlash=true;
                 }
                 break;
-                //生成二维码页面
             case R.id.qrcode_btn_encode:
                 // 跳转到生成二维码页面
                 Bitmap b = createQRCode();
                 Intent intentEncode = getIntent();
-                intentEncode.putExtra("QR_CODE", b);
-                setResult(200, intentEncode);
+                intentEncode.putExtra(EXTRA_DATA, b);
+//                intentEncode.putExtra("QR_CODE", b);
+                setResult(RESULT_CODE_ENCODE, intentEncode);
                 finish();
+                break;
+            default:
                 break;
         }
     }
@@ -441,43 +440,43 @@
 3. 在`CaptureActivity`中获取相册中选择的图片来扫码：
 
 ```
-  @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //返回选择的需要扫描二维码的图片
-        if (resultCode == RESULT_OK) {
-            //被选择的二维码图片的uri
-            uri = data.getData();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //扫描二维码图片，得到结果
-                    //这个是ZXing帮我们封装好的方法了
-                    Result result = scanningImage(uri);
-                    if (result == null) {
-                        Looper.prepare();
-                        Toast.makeText(getApplicationContext(), "图片格式有误", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-                    } else {
-                        // 数据返回，给我们的启动Activity，如：MAinActivity
-                        String recode = (result.toString());
-                        Intent data = new Intent();
-                        data.putExtra("result", recode);
-                        setResult(300, data);
-                        finish();
-                    }
-                }
-            }).start();
-        }
-    }
+     @Override
+      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+          super.onActivityResult(requestCode, resultCode, data);
+          //返回选择的需要扫描二维码的图片
+          if (resultCode == RESULT_OK) {
+              //被选择的二维码图片的uri
+              uri = data.getData();
+              new Thread(new Runnable() {
+                  @Override
+                  public void run() {
+                      //扫描
+                      Result result = scanningImage(uri);
+                      if (result == null) {
+                          Looper.prepare();
+                          Toast.makeText(getApplicationContext(), "图片格式有误", Toast.LENGTH_SHORT).show();
+                          Looper.loop();
+                      } else {
+                          // 数据返回，在这里去处理扫码结果
+                          String recode = (result.toString());
+                          Intent data = new Intent();
+                          data.putExtra(EXTRA_DATA, recode);
+                          setResult(RESULT_CODE_DECODE, data);
+                          finish();
+                      }
+                  }
+              }).start();
+          }
+      }
 ```
 
 4. 最后只要在我们启动的Activity中的获取二维码扫描后的内容并做自己的处理就可以了，MainActivity中的使用
 
 ```
- private static final int REQUEST_QRCODE = 0x01;
 
-    public void onQRCodeClick(View view) {
+   private static final int REQUEST_QRCODE = 0x01;
+
+  public void onQRCodeClick(View view) {
         //启动二维码扫描的页面功能
         Intent intent = new Intent(this, CaptureActivity.class);
         startActivityForResult(intent, REQUEST_QRCODE);
@@ -485,16 +484,16 @@
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-
-            //返回的二维码解析数据
-            case REQUEST_QRCODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    String code = data.getStringExtra("result");
-                    //下面就是自己对二维码数据的解析了
-                    //........
-                }
-                break;
+        if (requestCode == REQUEST_QRCODE) {
+            switch (resultCode) {
+                case CaptureActivity.RESULT_CODE_DECODE:
+                case Activity.RESULT_OK:
+                    String codeData = data.getStringExtra(CaptureActivity.EXTRA_DATA);
+                    Toast.makeText(this, codeData, Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
