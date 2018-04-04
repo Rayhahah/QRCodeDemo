@@ -61,7 +61,7 @@ public final class ViewfinderView extends View {
     private int ScreenRate;
 
 
-    private static final int CORNER_WIDTH = 5;
+    private static final int CORNER_WIDTH = 8;
 
 
     private static final int SPEEN_DISTANCE = 5;
@@ -75,6 +75,7 @@ public final class ViewfinderView extends View {
     private int slideTop;
     private int slideBottom;
     private boolean isFirst;
+    private int scanColor;
 
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
@@ -83,15 +84,18 @@ public final class ViewfinderView extends View {
         // Initialize these once for performance rather than calling them every
         // time in onDraw().
         paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
         Resources resources = getResources();
         maskColor = resources.getColor(R.color.viewfinder_mask);
+        scanColor = resources.getColor(R.color.colorPrimaryDayDark);
         resultColor = resources.getColor(R.color.result_view);
         resultPointColor = resources.getColor(R.color.possible_result_points);
         possibleResultPoints = new HashSet<ResultPoint>(5);
 
         //适配屏幕密度
         density = context.getResources().getDisplayMetrics().density;
-        ScreenRate = (int) (20 * density);
+        ScreenRate = (int) (30 * density);
     }
 
     @Override
@@ -125,7 +129,7 @@ public final class ViewfinderView extends View {
         } else {
 
             //画出8个正方形，组成括住扫码框
-            paint.setColor(Color.BLUE);
+            paint.setColor(scanColor);
             canvas.drawRect(frame.left, frame.top, frame.left + ScreenRate,
                     frame.top + CORNER_WIDTH, paint);
             canvas.drawRect(frame.left, frame.top, frame.left + CORNER_WIDTH,
@@ -156,7 +160,7 @@ public final class ViewfinderView extends View {
             lineRect.top = slideTop;
             lineRect.bottom = slideTop + 18;
             canvas.drawBitmap(((BitmapDrawable) (getResources()
-                            .getDrawable(R.drawable.fle))).getBitmap(), null, lineRect,
+                            .getDrawable(R.drawable.blue_line))).getBitmap(), null, lineRect,
                     paint);
 
             paint.setColor(Color.WHITE);

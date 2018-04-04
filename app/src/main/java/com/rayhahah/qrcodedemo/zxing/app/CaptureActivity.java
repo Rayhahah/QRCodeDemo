@@ -37,6 +37,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +92,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private static final String RETURN_URL_PARAM = "ret";
 
     private static final Set<ResultMetadataType> DISPLAYABLE_METADATA_TYPES;
+    public static final int RESULT_CODE_ENCODE = 200;
+    public static final int RESULT_CODE_DECODE = 300;
+
+    //    public static final String EXTRA_DATA = "result";
+    public static final String EXTRA_DATA = "SCAN_RESULT";
 
     static {
         DISPLAYABLE_METADATA_TYPES = new HashSet<ResultMetadataType>(5);
@@ -100,7 +106,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         DISPLAYABLE_METADATA_TYPES.add(ResultMetadataType.POSSIBLE_COUNTRY);
     }
 
-    private TextView btnBack;
+    private ImageView btnBack;
     private TextView btnPhoto;
     private TextView btnFlash;
     private TextView btnEncode;
@@ -109,7 +115,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.qrcode_btn_back:
+            case R.id.iv_qrcode_back:
                 finish();
                 break;
             case R.id.qrcode_btn_photo:
@@ -123,18 +129,23 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 if (isFlash) {
                     //关闭闪光灯
                     CameraManager.get().turnLightOff();
+                    isFlash=false;
                 } else {
                     //开启闪光灯
-                    CameraManager.get().turnLightOff();
+                    CameraManager.get().turnLightOn();
+                    isFlash=true;
                 }
                 break;
             case R.id.qrcode_btn_encode:
                 // 跳转到生成二维码页面
                 Bitmap b = createQRCode();
                 Intent intentEncode = getIntent();
-                intentEncode.putExtra("QR_CODE", b);
-                setResult(200, intentEncode);
+                intentEncode.putExtra(EXTRA_DATA, b);
+//                intentEncode.putExtra("QR_CODE", b);
+                setResult(RESULT_CODE_ENCODE, intentEncode);
                 finish();
+                break;
+            default:
                 break;
         }
     }
@@ -180,7 +191,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         CameraManager.init(getApplication());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 
-        btnBack = ((TextView) findViewById(R.id.qrcode_btn_back));
+        btnBack = ((ImageView) findViewById(R.id.iv_qrcode_back));
         btnPhoto = ((TextView) findViewById(R.id.qrcode_btn_photo));
         btnFlash = ((TextView) findViewById(R.id.qrcode_btn_flash));
         btnEncode = ((TextView) findViewById(R.id.qrcode_btn_encode));
@@ -188,7 +199,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         btnPhoto.setOnClickListener(this);
         btnFlash.setOnClickListener(this);
         btnEncode.setOnClickListener(this);
-
 
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         surfaceHolder = surfaceView.getHolder();
@@ -363,6 +373,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                         handleDecodeInternally(rawResult, barcode);
                     }
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -531,8 +543,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                         // 数据返回，在这里去处理扫码结果
                         String recode = (result.toString());
                         Intent data = new Intent();
-                        data.putExtra("result", recode);
-                        setResult(300, data);
+                        data.putExtra(EXTRA_DATA, recode);
+                        setResult(RESULT_CODE_DECODE, data);
                         finish();
                     }
                 }
@@ -541,7 +553,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     protected Result scanningImage(Uri path) {
-        if (path == null || path.equals("")) {
+        if (path == null || "".equals(path)) {
             return null;
         }
         // DecodeHintType 和EncodeHintType

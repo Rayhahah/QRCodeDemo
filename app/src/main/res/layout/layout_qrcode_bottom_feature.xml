@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_large_iii"
-    android:background="@color/black"
-    android:orientation="horizontal">
+    android:layout_height="@dimen/dp_60"
+    android:background="@color/transparent"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_5">
 
     <TextView
         android:id="@+id/qrcode_btn_photo"
@@ -12,8 +14,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:drawableTop="@drawable/selector_ic_photo"
-        android:text="相册"
-        android:textColor="@color/white" />
+        android:text="@string/photo_album"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/sp_16"/>
 
     <TextView
         android:id="@+id/qrcode_btn_flash"
@@ -22,8 +25,9 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:drawableTop="@drawable/selector_ic_flash"
-        android:text="闪光灯"
-        android:textColor="@color/white" />
+        android:text="@string/flash_light"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/sp_16"/>
 
     <TextView
         android:id="@+id/qrcode_btn_encode"
@@ -32,7 +36,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:drawableTop="@drawable/selector_ic_qrcode"
-        android:text="二维码"
-        android:textColor="@color/white" />
+        android:text="@string/qrcode"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/sp_16"/>
 
 </LinearLayout>

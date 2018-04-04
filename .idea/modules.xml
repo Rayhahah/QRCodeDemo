@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/QRCodeDemo.iml" filepath="$PROJECT_DIR$/QRCodeDemo.iml" />
+      <module fileurl="file://E:\android\workspace\master\QRCodeDemo\QRCodeDemo.iml" filepath="E:\android\workspace\master\QRCodeDemo\QRCodeDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\android\workspace\master\QRCodeDemo\app\app.iml" filepath="E:\android\workspace\master\QRCodeDemo\app\app.iml" />
     </modules>
   </component>
 </project>

@@ -29,6 +29,10 @@
     <string name="preferences_supplemental_title">Retrieve more info</string>
     <string name="preferences_vibrate_title">Vibrate</string>
     <string name="preview_msg">&#160;preview pages available,click Download for more.</string>
+    <string name="photo_album">相册</string>
+    <string name="flash_light">闪光灯</string>
+    <string name="qrcode">二维码</string>
+    <string name="decode_qrcode">扫一扫</string>
 
 
 </resources>

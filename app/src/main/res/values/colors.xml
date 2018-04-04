@@ -33,4 +33,5 @@
     <color name="result_minor_text">#ffc0c0c0</color>
     <color name="result_points">#c000ff00</color>
     <color name="system_bar_color">#fed952</color>
+    <color name="colorPrimaryDayDark">#303F9F</color>
 </resources>
